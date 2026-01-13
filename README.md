@@ -1,4 +1,16 @@
-# SEtup
+## INtroduction
+#### Hardware
+Processor: Intel Core i5-1135G7 (11th Gen).
+
+RAM: 16GB DDR4.
+
+Storage: 512GB NVMe SSD.
+
+GPU: Integrated Intel Iris Xe Graphics.
+
+Operating Systems: Arch Linux
+
+## SEtup
 
 ```
 
@@ -15,7 +27,7 @@ conda activate MediSign_MSL
 pip install -r requirements.txt
 
 ```
-# Folder structure
+## Folder structure
 - To replicate our current setup, the folder structure must look like this :
 
 ```
@@ -26,21 +38,21 @@ MediSign/
 └── requirements.txt      # Project dependencies
 
 ```
-# Requirements status
+## Requirements status
 
 #### a) Datasets Selection & Expansion
 - We used 2 datasets [MyWSL2023](https://data.mendeley.com/datasets/zvk55p7ktd/1) from Mendeley 
 and [Malaysian Sign Language (MSL) Image Dataset](https://www.kaggle.com/datasets/pradeepisawasan/malaysian-sign-language-msl-image-dataset) from Kaggle.
 - Preprocess:
-  1. [Preprocessing script](Scripts/prep.py) uses recursive search to look for image files, take the parent folder name and use it as the ground truth.
+  1. [prep.py](Scripts/prep.py) uses recursive search to look for image files, take the parent folder name and use it as the ground truth.
   2. Features are extracted using the MediaPipe Hands module to extract landmarks.
 
 #### b) Algorithm Implementation
-- [Trainer script](Scripts/trainer.py) combined both Random Forest (RF) and Support Vector Machine (SVM) into a single training module. Despite the different mathematical 
+- [trainer.py](Scripts/trainer.py) combined both Random Forest (RF) and Support Vector Machine (SVM) into a single training module. Despite the different mathematical 
 approaches, both algorithms achieved >98% accuracy.
 
 #### c) System Development
-- [Demo](Scripts/demo.py) Allow switching between models trained in RF and SVM.
+- [demo.py](Scripts/demo.py) Allow switching between models trained in RF and SVM.
 
 #### d) Experimental Setup
 - Experimenting with different parameter settings ; n for RF and C for SVM :
@@ -57,15 +69,31 @@ approaches, both algorithms achieved >98% accuracy.
       | RF | n=150 | 98.12 |
       | SVM | C=0.5 | 97.24 |
       | SVM | C=1.5 | 98.69 |
-- 
-# NOtes
+#### Tuning Graphs - plotted using [graph.py](Scripts/graph.py)
+
+RF
+
+![rftuniing](Scripts/rf_tuning.png)
+
+
+SVM
+
+![svmtuniing](Scripts/svm_tuning.png)
+
+
+#### Confusion Matrix
+
+![Matrix](Scripts/confusion_matrix.png)
+
+
+## NOtes
 #### Training the AI with 2 datasets that displays different type of handsigns was proven to be confusing. 
 
 - Our first dataset only shows standard handsigns meaning the extracted data was only for landmark of hands.
 - The second dataset however was a broader type of data meaning it involves interaction of hands with different bodypart such as mouth and stomach.
 - Training the AI on a merged dataset extracted from these 2 causes the AI to confuse between the landmark of hands and its interactions witb other bodyparts.
 
-### Solution : switched to another dataset
+#### Solution : switched to another dataset
 
 - Contain cropped images of single word handsigns related to medical problems.
 
