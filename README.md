@@ -12,10 +12,10 @@ Operating Systems: Arch Linux
 
 ## SEtup
 
-## Folder structure
-- To replicate our current setup, the folder structure must look like this :
+#### Folder structure
 
 ```
+# To replicate our current setup, the folder structure must look like this :
 MediSign/
 ├── CSVs/                 # Folder for extracted landmark data
 ├── Datasets/             # Source images (Words, V1, V2)
