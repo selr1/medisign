@@ -39,23 +39,21 @@ def train_and_compare():
     rf_acc = accuracy_score(y_test, rf_pred)
 
     # 2. SVM Implementation
-    print("Training SVM (RBF Kernel)...")
+    print("Training SVM...")
     svm = SVC(C=1.5, kernel='rbf', probability=True, random_state=42)
     svm.fit(X_train_scaled, y_train)
     svm_pred = svm.predict(X_test_scaled)
     svm_acc = accuracy_score(y_test, svm_pred)
 
     # Results Comparison
-    print("\n" + "="*30)
+    print("\n" + "RESULTS")
     print(f"Random Forest Accuracy: {rf_acc*100:.2f}%")
     print(f"SVM Accuracy:           {svm_acc*100:.2f}%")
-    print("="*30)
 
     # Save components
     joblib.dump(rf, RF_MODEL_PATH)
     joblib.dump(svm, SVM_MODEL_PATH)
     joblib.dump(scaler, SCALER_PATH)
-    print(f"\nModels and scaler saved in local directory.")
 
 if __name__ == "__main__":
     train_and_compare()
