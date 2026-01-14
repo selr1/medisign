@@ -30,7 +30,7 @@ def generate_visuals():
 
     # 1. Classification Report
     report = classification_report(y_test, y_pred)
-    with open('classification_report.txt', 'w') as f:
+    with open('classification_report_svm.txt', 'w') as f:
         f.write(report)
 
     # 2. Confusion Matrix Visual
@@ -40,11 +40,11 @@ def generate_visuals():
                 xticklabels=model.classes_, 
                 yticklabels=model.classes_)
     
-    plt.title('MSL Recognition Performance - Confusion Matrix (SVM C=1.5)')
+    plt.title('Confusion Matrix (SVM C=1.5)')
     plt.xlabel('Predicted Label')
     plt.ylabel('True Label')
     
-    plt.savefig('confusion_matrix.png', dpi=300, bbox_inches='tight')
+    plt.savefig('confusion_matrix_svm.png', dpi=300, bbox_inches='tight')
     print("\n" + "RESULTS")
     print("\nsaved: confusion_matrix.png and classification_report.txt")
 

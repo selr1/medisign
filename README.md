@@ -1,39 +1,7 @@
-## INtroduction - MediSign
+# MediSign
 ![ss](2026-01-14-082635_hyprshot.png)
-### Models
-```svm_modelc1.5``` is the best model. When running the demo press S to swtich between models.
-To produce ```svm_modelc1.5```, C value in ```trainer.py```  must be 1.5. 
-```
-svm = SVC(C=1.5, kernel='rbf', probability=True, random_state=42)
-```
 
-### Environment
-Processor: Intel Core i5-1135G7 (11th Gen).
-
-RAM: 16GB DDR4.
-
-Storage: 512GB NVMe SSD.
-
-GPU: Integrated Intel Iris Xe Graphics.
-
-Operating Systems: Arch Linux
-
-## SEtup
-
-### Folder Structure
-
-```
-# To replicate our current setup, the folder structure must look like this :
-
-MediSign/
-├── CSVs/                 # Folder for extracted landmark data
-├── Datasets/             # Source images (Words, V1, V2)
-├── Scripts/              # All python scripts and saved models
-└── requirements.txt      # Project dependencies
-
-```
-
-### Run Instructions
+### Quick Start (Must have models ready & files structured correctly)
 
 ```bash
 
@@ -54,39 +22,75 @@ cd Scripts/
 python demo.py
 
 ```
+##### Note: When running the demo, press 'S' to switch between the Random Forest and SVM model, 'Q' to quit.
 
-## Requirements status
+### Environment
+**Processor**: Intel Core i5-1135G7 (11th Gen).
+
+**RAM**: 16GB DDR4.
+
+**Storage**: 512GB NVMe SSD.
+
+**GPU**: Integrated Intel Iris Xe Graphics.
+
+**Operating Systems**: Arch Linux
+
+### Files Structure
+
+```
+# To replicate our current setup, the folder structure must look like this :
+
+MediSign/
+├── CSVs/                 # Folder for extracted landmark data
+├── Datasets/             # Source images (Words, V1, V2)
+├── Scripts/              # All python scripts and saved models
+└── requirements.txt      # Project dependencies
+
+```
+
+### Requirements Status
 
 #### a) Datasets Selection & Expansion
-- We used 2 datasets [MyWSL2023](https://data.mendeley.com/datasets/zvk55p7ktd/1) from Mendeley 
-and [Malaysian Sign Language (MSL) Image Dataset](https://www.kaggle.com/datasets/pradeepisawasan/malaysian-sign-language-msl-image-dataset) from Kaggle.
-- Preprocess:
-  1. [prep.py](Scripts/prep.py) uses recursive search to look for image files, take the parent folder name and use it as the ground truth.
-  2. Features are extracted using the MediaPipe Hands module to extract landmarks.
-- [validator.py](Scripts/validator.py) was used to determine the validity of obtained CSV ([preprocessed.csv](CSVs/preprocessed.csv))
+
+* Integrated two primary datasets: [MyWSL2023](https://data.mendeley.com/datasets/zvk55p7ktd/1) from Mendeley and the [MSL Image Dataset](https://www.kaggle.com/datasets/pradeepisawasan/malaysian-sign-language-msl-image-dataset) from Kaggle.
+* **Preprocessing:**
+1. The [prep.py](Scripts/prep.py) script utilizes recursive search to identify image files, automatically assigning the parent folder name as the ground truth label.
+2. Utilized the MediaPipe Hands module to extract coordinate landmarks from the processed images.
+3. The [validator.py](Scripts/validator.py) script was implemented to verify the integrity and structure of the final [preprocessed.csv](CSVs/preprocessed.csv).
+
 #### b) Algorithm Implementation
-- [trainer.py](Scripts/trainer.py) combined both Random Forest (RF) and Support Vector Machine (SVM) into a single training module. Despite the different mathematical 
-approaches, both algorithms achieved >98% accuracy.
+
+* The [trainer.py](Scripts/trainer.py) script uses both **Random Forest (RF)** and **Support Vector Machine (SVM)** in a single training script.
+* Despite their distinct mathematical methodologies, both algorithms achieved accuracy exceeding **98%**.
 
 #### c) System Development
-- [demo.py](Scripts/demo.py) Allow switching between models trained in RF and SVM.
+
+* The [demo.py](Scripts/demo.py) application supports live inference and allows users to toggle between RF and SVM models.
 
 #### d) Experimental Setup
-- Experimenting with different parameter settings ; n for RF and C for SVM :
-  1. Baseline : 
-  | Algorithm | Parameter | Accuracy (%) |
-      | ---       | ---      | --- |
-      | RF | n=100 | 98.12 |
-      | SVM | C=1.0 | 98.09 |
-- 
-  2. Results :
-      | Algorithm | Parameter | Accuracy (%) |
-      | ---       | ---      | --- |
-      | RF | n=50 | 98.14 |
-      | RF | n=150 | 98.12 |
-      | SVM | C=0.5 | 97.24 |
-      | SVM | C=1.5 | 98.69 |
-### Tuning Graphs - plotted using [graph.py](Scripts/graph.py)
+
+* Conducted experiments by adjusting the number of estimators **(n)** for **Random Forest** and the regularization parameter **(C)** for **SVM**.
+* These testing provided us with our **best model, ```svm_modelc1.5```**.
+
+**1. Baseline Configuration**
+
+| Algorithm | Parameter | Accuracy (%) |
+| --- | --- | --- |
+| Random Forest | n=100 | 98.12 |
+| Support Vector Machine | C=1.0 | 98.09 |
+
+**2. Optimized Results**
+
+| Algorithm | Parameter | Accuracy (%) |
+| --- | --- | --- |
+| Random Forest | n=50 | 98.14 |
+| Random Forest | n=150 | 98.12 |
+| Support Vector Machine | C=0.5  | 97.24 |
+| **Support Vector Machine** | **C=1.5** | **98.69** |
+
+### Tuning Graphs
+
+Generated by [graph.py](Scripts/graph.py).
 
 RF
 
@@ -99,14 +103,147 @@ SVM
 
 ### Evaluations
 
+**svm_modelc1.5**
+
 #### Confusion Matrix
 
-svm_modelc1.5
+![Matrix](Scripts/confusion_matrix_svm.png)
 
-![Matrix](Scripts/confusion_matrix.png)
+#### Classification Report
 
+![](Scripts/classification_report_svm.txt)
 
-## NOtes
+```
+              precision    recall  f1-score   support
+
+           0       0.94      0.91      0.92        74
+           1       1.00      1.00      1.00        90
+          10       0.98      0.89      0.93        90
+           2       1.00      0.96      0.98        82
+           3       0.99      1.00      0.99        93
+           4       0.98      1.00      0.99       102
+           5       1.00      1.00      1.00        90
+           6       0.99      0.97      0.98        91
+           7       1.00      0.99      0.99        91
+           8       1.00      1.00      1.00        98
+           9       0.99      1.00      0.99        92
+           A       0.90      0.98      0.93        81
+         AIR       1.00      0.98      0.99        58
+        AWAK       0.99      0.99      0.99        98
+           B       0.97      0.98      0.97        89
+           C       1.00      1.00      1.00        85
+           D       0.99      1.00      0.99        87
+       DEMAM       0.97      1.00      0.98        30
+      DENGAR       1.00      0.50      0.67         4
+           E       1.00      1.00      1.00        85
+           F       1.00      0.99      0.99        87
+           G       1.00      0.97      0.99        79
+           H       1.00      1.00      1.00        78
+           I       0.99      1.00      0.99        89
+           J       1.00      1.00      1.00        82
+           K       1.00      1.00      1.00        85
+           L       1.00      1.00      1.00        89
+           M       0.99      1.00      0.99        86
+        MAAF       0.98      1.00      0.99       102
+       MAKAN       0.98      0.99      0.98        99
+       MINUM       0.98      0.98      0.98       145
+           N       1.00      0.99      0.99        98
+           O       0.95      0.97      0.96        92
+           P       0.99      1.00      0.99        79
+           Q       1.00      0.99      0.99        96
+           R       1.00      1.00      1.00        93
+           S       1.00      1.00      1.00       103
+       SALAH       1.00      0.99      0.99       151
+        SAYA       0.96      0.99      0.97       130
+      SENYAP       1.00      1.00      1.00        43
+           T       0.94      1.00      0.97        85
+       TIDUR       1.00      0.94      0.97        17
+      TOLONG       1.00      1.00      1.00        99
+           U       0.95      1.00      0.98       100
+           V       1.00      0.98      0.99       102
+           W       1.00      0.99      0.99        97
+       WAKTU       1.00      1.00      1.00        42
+           X       1.00      0.96      0.98        95
+           Y       1.00      0.99      0.99        98
+           Z       1.00      0.99      0.99       100
+
+    accuracy                           0.99      4351
+   macro avg       0.99      0.98      0.98      4351
+weighted avg       0.99      0.99      0.99      4351
+
+```
+
+**rf_modeln50**
+
+#### Confusion Matrix
+
+![Matrix](Scripts/confusion_matrixrf.png)
+
+#### Classification Report
+
+![](Scripts/classification_reportrf.txt)
+
+```
+              precision    recall  f1-score   support
+
+           0       0.97      0.92      0.94        74
+           1       1.00      0.99      0.99        90
+          10       0.99      0.92      0.95        90
+           2       0.95      0.95      0.95        82
+           3       0.97      0.99      0.98        93
+           4       0.93      0.99      0.96       102
+           5       0.99      0.99      0.99        90
+           6       0.98      0.98      0.98        91
+           7       1.00      1.00      1.00        91
+           8       0.98      1.00      0.99        98
+           9       1.00      0.99      0.99        92
+           A       0.97      0.96      0.97        81
+         AIR       0.98      1.00      0.99        58
+        AWAK       0.99      1.00      0.99        98
+           B       1.00      0.90      0.95        89
+           C       0.96      1.00      0.98        85
+           D       0.99      1.00      0.99        87
+       DEMAM       1.00      1.00      1.00        30
+      DENGAR       1.00      0.50      0.67         4
+           E       0.98      1.00      0.99        85
+           F       1.00      0.97      0.98        87
+           G       1.00      0.97      0.99        79
+           H       0.99      1.00      0.99        78
+           I       1.00      0.97      0.98        89
+           J       1.00      1.00      1.00        82
+           K       0.97      0.99      0.98        85
+           L       0.99      1.00      0.99        89
+           M       0.96      1.00      0.98        86
+        MAAF       0.99      1.00      1.00       102
+       MAKAN       0.98      0.99      0.98        99
+       MINUM       0.99      0.99      0.99       145
+           N       0.98      0.98      0.98        98
+           O       0.95      0.98      0.96        92
+           P       0.99      1.00      0.99        79
+           Q       1.00      0.99      0.99        96
+           R       0.96      0.99      0.97        93
+           S       0.98      0.96      0.97       103
+       SALAH       1.00      0.99      1.00       151
+        SAYA       0.98      1.00      0.99       130
+      SENYAP       1.00      1.00      1.00        43
+           T       0.99      0.98      0.98        85
+       TIDUR       1.00      0.94      0.97        17
+      TOLONG       1.00      1.00      1.00        99
+           U       0.93      0.94      0.94       100
+           V       0.99      0.93      0.96       102
+           W       1.00      0.98      0.99        97
+       WAKTU       1.00      1.00      1.00        42
+           X       0.98      0.99      0.98        95
+           Y       0.99      0.99      0.99        98
+           Z       0.95      1.00      0.98       100
+
+    accuracy                           0.98      4351
+   macro avg       0.98      0.97      0.98      4351
+weighted avg       0.98      0.98      0.98      4351
+
+```
+### Notes
+
 #### Training the AI with 2 datasets that displays different type of handsigns was proven to be confusing. 
 
 - Our first dataset only shows standard handsigns meaning the extracted data was only for landmark of hands.
