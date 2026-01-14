@@ -6,7 +6,7 @@ import numpy as np
 
 # Load models and scaler
 rf_model = joblib.load('./rf_model.pkl')
-svm_model = joblib.load('./svm_model1.5.pkl')
+svm_model = joblib.load('./svm_modelc1.5.pkl')
 scaler = joblib.load('./scaler.pkl')
 
 # MediaPipe setup
